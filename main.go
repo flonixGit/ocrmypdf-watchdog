@@ -66,8 +66,10 @@ func main() {
 
 func (c *Context) watchdog() {
 	frequency := time.Duration(c.Frequency) * time.Second
+	log.Println("in function watchdog()")
 	for {
 		var files []string
+		log.Println("Watchdog active ...")
 		err := filepath.Walk(c.InFolder, func(path string, info os.FileInfo, err error) error {
 			if !info.IsDir() {
 				if c.hasOneOfExtensions(path) {
@@ -82,6 +84,8 @@ func (c *Context) watchdog() {
 		for _, file := range files {
 			c.processDocument(file)
 		}
+		
+		log.Println("Watchdog sleeping ...")
 
 		timer := time.NewTimer(frequency)
 		<-timer.C
